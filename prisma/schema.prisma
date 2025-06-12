@@ -1,0 +1,273 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  clerkId   String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  roles     Roles[] @relation("UserRoles")
+  chats     Chat[]
+  messages  Message[] 
+  bannedUsers BannedUsers[] @relation("BannedUsers")
+  isAdmin Boolean @default(false)
+  isModerator Boolean @default(false)
+  isSuperAdmin Boolean @default(false)
+  isBanned Boolean @default(false)
+  isActive Boolean @default(true)
+  isOnline Boolean @default(false)
+  isOffline Boolean @default(false)
+  isAway Boolean @default(false)
+  isBusy Boolean @default(false)
+  isIdle Boolean @default(false)
+  isDoNotDisturb Boolean @default(false)
+  isInvisible Boolean @default(false)
+  isTyping Boolean @default(false)
+  profileId String? @unique
+  profile Profile []
+
+  project Project[]
+  comments Comments[]
+  userReports UserReports[]
+}
+
+model Roles {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User[] @relation("UserRoles")
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  content   String
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  chatId    String?
+  chat      Chat?    @relation(fields: [chatId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  likes     Int @default(0)
+  dislikes  Int @default(0)
+  replies   Int @default(0)
+  isLiked Boolean @default(false)
+  isDisliked Boolean @default(false)
+  isReported Boolean @default(false)
+  isSpam Boolean @default(false)
+  isOffensive Boolean @default(false)
+  userReports UserReports[]
+  messageReplies Replies[]
+}
+
+model Replies {
+  id        String   @id @default(uuid())
+  messageId String
+  message   Message? @relation(fields: [messageId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  content   String
+  likes     Int @default(0)
+  dislikes  Int @default(0)
+  isLiked Boolean @default(false)
+  isDisliked Boolean @default(false)
+  isReported Boolean @default(false)
+  isSpam Boolean @default(false)
+  isOffensive Boolean @default(false)
+  userReports UserReports[]
+} 
+
+model Chat {
+  id        String   @id @default(uuid())
+  messages  Message[]
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String?
+  description String?
+  imageUrl String?
+  isGroup Boolean @default(false)
+  isPrivate Boolean @default(true)
+  isPublic Boolean @default(false)
+  isDeleted Boolean @default(false)
+  isArchived Boolean @default(false)
+  isStarred Boolean @default(false)
+  isFavorite Boolean @default(false)
+  isRead Boolean @default(false)
+  isUnread Boolean @default(false)
+  isMuted Boolean @default(false)
+  groupChatsId String?
+  groupChats GroupChats? @relation(fields: [groupChatsId], references: [id])
+  publicChatsId String?
+  publicChats PublicChats? @relation(fields: [publicChatsId], references: [id])
+  privateChatsId String?
+  privateChats PrivateChats? @relation(fields: [privateChatsId], references: [id])
+}
+
+model GroupChats {
+  id        String   @id @default(uuid())
+  name      String
+  description String?
+  imageUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  chats     Chat[]
+}
+
+model PublicChats {
+  id        String   @id @default(uuid())
+  name      String
+  description String?
+  imageUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  chats     Chat[]
+}
+
+model PrivateChats {
+  id        String   @id @default(uuid())
+  name      String
+  description String?
+  imageUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  chats     Chat[]
+}
+
+model BannedUsers {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User[]     @relation("BannedUsers")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model BannedWords {
+  id        String   @id @default(uuid())
+  word      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Profile {
+  id        String   @id @default(uuid())
+  userId    String @unique
+  user      User? @relation(fields: [userId], references: [id])
+  name      String
+  email     String
+  phone     String
+  address   String
+  city      String
+  state     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  comments Comments[]
+  userReports UserReports[]
+}
+
+model Project {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User? @relation(fields: [userId], references: [id])
+  name      String
+  description String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  comments Comments[]
+  userReports UserReports[]
+}
+
+model Comments {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User? @relation(fields: [userId], references: [id])
+  profileId String?
+  profile   Profile? @relation(fields: [profileId], references: [id])
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  content   String
+  likes     Int @default(0)
+  dislikes  Int @default(0)
+  isLiked Boolean @default(false)
+  isDisliked Boolean @default(false)
+  isReported Boolean @default(false)
+  isConcern Boolean @default(false)
+  isSuggestion Boolean @default(false)
+  isQuestion Boolean @default(false)
+  isAnswer Boolean @default(false)
+  isSpam Boolean @default(false)
+  isOffensive Boolean @default(false)
+  isInappropriate Boolean @default(false)
+  isHarassment Boolean @default(false)
+  isBullying Boolean @default(false)
+  isHateSpeech Boolean @default(false)
+  isAbuse Boolean @default(false)
+  userReports UserReports[]
+  commentReplies CommentReplies[]
+} 
+
+model CommentReplies {
+  id        String   @id @default(uuid())
+  commentId String
+  comment   Comments? @relation(fields: [commentId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  content   String
+  likes     Int @default(0)
+  dislikes  Int @default(0)
+  isLiked Boolean @default(false)
+  isDisliked Boolean @default(false)
+  isReported Boolean @default(false)
+  isSpam Boolean @default(false)
+  isOffensive Boolean @default(false)
+  isInappropriate Boolean @default(false)
+  isHarassment Boolean @default(false)
+  isBullying Boolean @default(false)
+  isHateSpeech Boolean @default(false)
+}
+
+model UserReports {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User? @relation(fields: [userId], references: [id])
+  commentId String?
+  comment   Comments? @relation(fields: [commentId], references: [id])
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id])
+  profileId String?
+  profile   Profile? @relation(fields: [profileId], references: [id])
+  content   String
+  messageId String?
+  message   Message? @relation(fields: [messageId], references: [id])
+  replyId String?
+  reply   Replies? @relation(fields: [replyId], references: [id])
+  isResolved Boolean @default(false)
+  isPending Boolean @default(false)
+  isApproved Boolean @default(false)
+  isRejected Boolean @default(false)
+  isSpam Boolean @default(false)
+  isOffensive Boolean @default(false)
+  isInappropriate Boolean @default(false)
+  isHarassment Boolean @default(false)
+  isBullying Boolean @default(false)
+  isHateSpeech Boolean @default(false)
+  isAbuse Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
