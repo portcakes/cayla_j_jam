@@ -12,12 +12,12 @@ export async function POST(request: Request) {
         const body = await request.json()
         console.log('Received request body:', body)
 
-        const { content, chatId } = body
+        const { content, Id } = body
 
-        if (!content || !chatId) {
-            console.error('Missing required fields:', { content, chatId })
+        if (!content || !Id) {
+            console.error('Missing required fields:', { content, Id })
             return NextResponse.json(
-                { error: 'Content and chatId are required' },
+                { error: 'Content and Id are required' },
                 { status: 400 }
             )
         }
@@ -37,14 +37,14 @@ export async function POST(request: Request) {
 
         console.log('Creating message with data:', {
             content,
-            chatId,
+            Id,
             userId: user.id,
         })
 
         const message = await db.message.create({
             data: {
                 content,
-                chatId,
+                chatId: Id,
                 userId: user.id,
             },
             include: {

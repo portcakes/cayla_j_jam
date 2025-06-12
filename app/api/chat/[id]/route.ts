@@ -1,14 +1,17 @@
 import { db } from '@/lib/db'
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(
-    request: Request,
-    { params }: { params: { id: string } }
+    request: NextRequest,
+    context: { params: { id: string } }
 ) {
     try {
+        const params = await context.params
+        const { id } = params
+        
         const chat = await db.chat.findUnique({
             where: {
-                id: params.id
+                id
             },
             include: {
                 users: true,
@@ -29,7 +32,6 @@ export async function GET(
 
         return NextResponse.json(chat)
     } catch (error) {
-        console.error('Error fetching chat:', error)
         return NextResponse.json(
             { error: 'Internal Server Error', details: error instanceof Error ? error.message : 'Unknown error' },
             { status: 500 }

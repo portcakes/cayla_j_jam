@@ -1,8 +1,8 @@
 import { db } from '@/lib/db'
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
     try {
         console.log('Starting chat creation process...')
         

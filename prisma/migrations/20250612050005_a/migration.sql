@@ -1,5 +1,5 @@
 -- AlterTable
-ALTER TABLE "Message" ADD COLUMN     "chatId" TEXT;
+ALTER TABLE "Message" ADD COLUMN     "Id" TEXT;
 
 -- CreateTable
 CREATE TABLE "Chat" (
@@ -12,7 +12,7 @@ CREATE TABLE "Chat" (
 );
 
 -- AddForeignKey
-ALTER TABLE "Message" ADD CONSTRAINT "Message_chatId_fkey" FOREIGN KEY ("chatId") REFERENCES "Chat"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Message" ADD CONSTRAINT "Message_Id_fkey" FOREIGN KEY ("Id") REFERENCES "Chat"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Chat" ADD CONSTRAINT "Chat_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;

@@ -3,16 +3,16 @@ import RichTextEditor from './rich-text-editor/RichTextEditor'
 import ChatHistory from './ChatHistory'
 
 interface ChatWindowProps {
-    chatId: string
+    Id: string
 }
 
-const ChatWindow = ({ chatId }: ChatWindowProps) => {
-  return (
-    <div className="flex flex-col gap-4 w-full">
-        <ChatHistory />
-        <RichTextEditor chatId={chatId} />
-    </div>
-  )
+const ChatWindow = ({ Id }: ChatWindowProps) => {
+    return (
+        <div className="flex flex-col gap-4 w-full">
+            <ChatHistory Id={Id} />
+            <RichTextEditor Id={Id} />
+        </div>
+    )
 }
 
 export default ChatWindow

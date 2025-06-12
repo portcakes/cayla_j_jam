@@ -35,7 +35,7 @@ const ChatClient = ({ chat }: ChatClientProps) => {
                         </div>
                     </div>
                     <div className="flex flex-row gap-2">
-                        <RichTextEditor chatId={chat.id} />
+                        <RichTextEditor Id={chat.id} />
                     </div>
                     <div className="flex flex-col gap-2">
                         <h2 className="text-lg font-bold">Members</h2>

@@ -1,6 +1,8 @@
 import { db } from "./db"
+import { currentUser } from "@clerk/nextjs/server"
 
-export const checkUser = async (user: any) => {
+export const checkUser = async () => {
+    const user = await currentUser()
     // if user is not found, return null
     if (!user) {
         return null

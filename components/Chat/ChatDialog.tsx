@@ -14,15 +14,15 @@ import { toast } from 'sonner'
 
 const ChatDialog = () => {
     const router = useRouter()
-    const [chatId, setChatId] = useState('')
+    const [Id, setId] = useState('')
 
     const handleJoinChat = async () => {
         try {
-            const response = await fetch(`/api/chat/${chatId}`)
+            const response = await fetch(`/api/chat/${Id}`)
             const data = await response.json()
             
             if (response.ok) {
-                router.push(`/chat/${chatId}`)
+                router.push(`/chat/${Id}`)
             } else {
                 toast.error('Failed to join chat')
             }

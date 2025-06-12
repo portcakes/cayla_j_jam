@@ -9,10 +9,10 @@ import { useUser } from '@clerk/nextjs'
 import { toast } from 'sonner'
 
 interface RichTextEditorProps {
-    chatId: string
+    Id: string
 }
 
-const RichTextEditor = ({ chatId }: RichTextEditorProps) => {
+const RichTextEditor = ({ Id }: RichTextEditorProps) => {
     const { user } = useUser()
     const editor = useEditor({
         extensions: [
@@ -32,7 +32,7 @@ const RichTextEditor = ({ chatId }: RichTextEditorProps) => {
             try {
                 console.log('Sending message with data:', {
                     content: editor?.getHTML(),
-                    chatId,
+                    Id,
                 })
 
                 const response = await fetch('/api/message/create', {
@@ -42,7 +42,7 @@ const RichTextEditor = ({ chatId }: RichTextEditorProps) => {
                     },
                     body: JSON.stringify({
                         content: editor?.getHTML(),
-                        chatId,
+                        Id,
                     }),
                 })
 
@@ -69,7 +69,7 @@ const RichTextEditor = ({ chatId }: RichTextEditorProps) => {
     }
 
     return (
-        <div className="flex flex-col items-center justify-center border-2 border-cyan-500 rounded-md p-4 w-full">
+        <div className="flex container flex-col items-center justify-center border-2 border-cyan-500 rounded-md p-4 m-4 w-full mx-auto">
             <div className="flex flex-row gap-2 mb-2">
                 <Button
                     variant="outline"
@@ -97,7 +97,7 @@ const RichTextEditor = ({ chatId }: RichTextEditorProps) => {
                 </Button>
             </div>
             <div className="w-full">
-                <EditorContent editor={editor} className="min-h-[100px] border rounded-md p-2" />
+                <EditorContent editor={editor} className=" border rounded-md p-2" />
             </div>
             <Button 
                 variant="outline" 

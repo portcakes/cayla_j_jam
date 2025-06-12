@@ -6,7 +6,12 @@ declare global {
 
 const prismaClientSingleton = () => {
     return new PrismaClient({
-        log: ['query', 'error', 'warn'],
+        datasources: {
+            db: {
+                url: process.env.DATABASE_URL
+            }
+        },
+        // log: process.env.NODE_ENV === 'development' ? ['error'] : [],
     })
 }
 
@@ -19,8 +24,11 @@ if (process.env.NODE_ENV !== 'production') {
 // Test the connection
 db.$connect()
     .then(() => {
-        console.log('Successfully connected to database')
+        // if (process.env.NODE_ENV === 'development') {
+        //     console.log('Successfully connected to database')
+        // }
     })
     .catch((error) => {
         console.error('Failed to connect to database:', error)
+        process.exit(1)
     })

@@ -1,10 +1,9 @@
 "use client"
 import React, { useState, useEffect } from 'react'
 import { Button } from './ui/button'
-import { useUser, SignOutButton, SignUpButton, SignInButton } from '@clerk/nextjs'
+import { useUser, SignOutButton, SignUpButton, SignInButton, UserButton } from '@clerk/nextjs'
 import { Laugh, SmilePlus, Smile, Angry, Annoyed, HandMetal, HeartHandshake, Heart,BicepsFlexed, ThumbsUp, Star, PartyPopper, Salad, LeafyGreen, PiggyBank, Gem, Ham, Sandwich, Croissant, Cake, Cherry, Coins, Gamepad, Ghost, Gift, Skull, Sparkles, Castle, Crown, Flower, Save, Bubbles, MoonStar, CableCar, CirclePower } from 'lucide-react'
 import ChatDialog from './Chat/ChatDialog'
-
 
 const Navbar = () => {
     const { user } = useUser()
@@ -33,6 +32,7 @@ const Navbar = () => {
 
                 {user && (
                     <>
+                        <UserButton />
                         <ChatDialog />
                     <SignOutButton>
                         <Button className="bg-blue-500 text-white p-6 rounded-md">Log Out</Button>
