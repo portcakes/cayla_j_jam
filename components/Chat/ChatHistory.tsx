@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import Messages from './Messages'
 import { Message } from '@/lib/generated/prisma'
 import { toast } from 'sonner'
@@ -13,6 +13,15 @@ const ChatHistory = ({ Id }: ChatHistoryProps) => {
     const [messages, setMessages] = useState<(Message & { user: { username: string | null, clerkId: string | null } | null })[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
+    const messagesEndRef = useRef<HTMLDivElement>(null)
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    }
+
+    useEffect(() => {
+        scrollToBottom()
+    }, [messages])
 
     const fetchMessages = async () => {
         if (!Id || typeof Id !== 'string' || Id.trim() === '') {
@@ -59,7 +68,7 @@ const ChatHistory = ({ Id }: ChatHistoryProps) => {
                 ) : messages.length === 0 ? (
                     <div>No messages yet</div>
                 ) : (
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-2 max-h-[500px] overflow-y-auto">
                         {[...messages].reverse().map((message) => (
                             <Messages 
                                 key={message.id} 
@@ -72,6 +81,7 @@ const ChatHistory = ({ Id }: ChatHistoryProps) => {
                                 }} 
                             />
                         ))}
+                        <div ref={messagesEndRef} />
                     </div>
                 )}
             </div>
