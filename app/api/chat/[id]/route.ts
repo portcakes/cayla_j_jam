@@ -9,6 +9,17 @@ export async function GET(
         const chat = await db.chat.findUnique({
             where: {
                 id: params.id
+            },
+            include: {
+                users: true,
+                messages: {
+                    orderBy: {
+                        createdAt: 'desc'
+                    },
+                    include: {
+                        user: true
+                    }
+                }
             }
         })
 
@@ -18,6 +29,10 @@ export async function GET(
 
         return NextResponse.json(chat)
     } catch (error) {
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+        console.error('Error fetching chat:', error)
+        return NextResponse.json(
+            { error: 'Internal Server Error', details: error instanceof Error ? error.message : 'Unknown error' },
+            { status: 500 }
+        )
     }
 } 
