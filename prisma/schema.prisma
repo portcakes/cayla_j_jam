@@ -41,6 +41,7 @@ model User {
   isTyping Boolean @default(false)
   profileId String? @unique
   profile Profile []
+  chatMembers Chat[] @relation("ChatMembers")
 
   project Project[]
   comments Comments[]
@@ -113,6 +114,7 @@ model Chat {
   isRead Boolean @default(false)
   isUnread Boolean @default(false)
   isMuted Boolean @default(false)
+  users User[] @relation("ChatMembers")
   groupChatsId String?
   groupChats GroupChats? @relation(fields: [groupChatsId], references: [id])
   publicChatsId String?
